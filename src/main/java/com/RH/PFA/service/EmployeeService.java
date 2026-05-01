@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.ApplicationEventPublisher;
+import com.RH.PFA.event.EmployeeCreatedEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +28,7 @@ public class EmployeeService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public EmployeeDTO createEmployee(EmployeeRequest request) {
@@ -57,6 +60,7 @@ public class EmployeeService {
                 .build();
 
         Employee savedEmployee = employeeRepository.save(employee);
+        eventPublisher.publishEvent(new EmployeeCreatedEvent(this, savedEmployee));
         return mapToDTO(savedEmployee);
     }
 

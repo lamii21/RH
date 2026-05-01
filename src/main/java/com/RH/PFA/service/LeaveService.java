@@ -11,6 +11,8 @@ import com.RH.PFA.repository.LeaveRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.ApplicationEventPublisher;
+import com.RH.PFA.event.LeaveStatusChangedEvent;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -22,6 +24,8 @@ public class LeaveService {
 
     private final LeaveRepository leaveRepository;
     private final EmployeeRepository employeeRepository;
+    private final ApplicationEventPublisher eventPublisher;
+    private final SmartSchedulingService smartSchedulingService;
 
     @Transactional
     public LeaveResponseDTO requestLeave(LeaveRequestDTO request) {
@@ -37,7 +41,9 @@ public class LeaveService {
                 .reason(request.getReason())
                 .build();
 
-        return mapToDTO(leaveRepository.save(leave));
+        leave = leaveRepository.save(leave);
+        eventPublisher.publishEvent(new LeaveStatusChangedEvent(this, leave));
+        return mapToDTO(leave);
     }
 
     public List<LeaveResponseDTO> getAllLeaves() {
@@ -57,6 +63,10 @@ public class LeaveService {
             throw new IllegalStateException("Leave is already processed");
         }
 
+        if (smartSchedulingService.willCauseUnderstaffing(leave)) {
+            throw new IllegalStateException("Approving this leave will cause understaffing (>30% on leave) in the department.");
+        }
+
         leave.setStatus(LeaveStatus.APPROVED);
         leave.setManagerComment(managerComment);
 
@@ -70,7 +80,9 @@ public class LeaveService {
         employee.setLeaveBalance((int) (employee.getLeaveBalance() - daysRequested));
         employeeRepository.save(employee);
 
-        return mapToDTO(leaveRepository.save(leave));
+        leave = leaveRepository.save(leave);
+        eventPublisher.publishEvent(new LeaveStatusChangedEvent(this, leave));
+        return mapToDTO(leave);
     }
 
     @Transactional
@@ -80,7 +92,9 @@ public class LeaveService {
 
         leave.setStatus(LeaveStatus.REJECTED);
         leave.setManagerComment(managerComment);
-        return mapToDTO(leaveRepository.save(leave));
+        leave = leaveRepository.save(leave);
+        eventPublisher.publishEvent(new LeaveStatusChangedEvent(this, leave));
+        return mapToDTO(leave);
     }
 
     private LeaveResponseDTO mapToDTO(Leave leave) {

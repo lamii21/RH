@@ -43,9 +43,9 @@ export default function EmployeesPage() {
           <h1 className="page-title">Employees Directory</h1>
           <p className="page-subtitle">Manage all company personnel.</p>
         </div>
-        <button className="btn btn-primary" onClick={() => alert('Add form goes here (Create separate page or modal)')}>
+        <Link href="/employees/add" className="btn btn-primary flex items-center gap-2">
           <Plus size={18} /> Add Employee
-        </button>
+        </Link>
       </div>
 
       <div className="card table-container">

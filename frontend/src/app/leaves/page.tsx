@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle, Plus } from 'lucide-react';
 import api from '@/lib/api';
+import LeaveRequestModal from '@/components/LeaveRequestModal';
 
 export default function LeavesPage() {
   const [leaves, setLeaves] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchLeaves = async () => {
     try {
@@ -41,10 +43,16 @@ export default function LeavesPage() {
           <h1 className="page-title">Leave Requests</h1>
           <p className="page-subtitle">Review and manage time off requests.</p>
         </div>
-        <button className="btn btn-primary" onClick={() => alert('Request form modal opens')}>
-          Request Leave
+        <button className="btn btn-primary flex items-center gap-2" onClick={() => setIsModalOpen(true)}>
+          <Plus size={18} /> Request Leave
         </button>
       </div>
+
+      <LeaveRequestModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSuccess={fetchLeaves} 
+      />
 
       <div className="card table-container">
         <table className="table">
