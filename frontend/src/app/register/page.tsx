@@ -20,9 +20,10 @@ export default function RegisterPage() {
     try {
       const res = await api.post('/auth/register', { email, password, role: 'ADMIN' });
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('userRole', 'ADMIN');
       router.push('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.error || err.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
     }

@@ -30,25 +30,24 @@ public class DashboardService {
         long totalEmployees = employeeRepository.count();
         long totalDepartments = departmentRepository.count();
 
-        long leavesPending = leaveRepository.findAll().stream()
-                .filter(l -> l.getStatus() == LeaveStatus.PENDING).count();
+        // Optimized: use count query instead of loading all leaves
+        long leavesPending = leaveRepository.countByStatus(LeaveStatus.PENDING);
 
+        // Optimized: use count query instead of loading all attendance
         LocalDate today = LocalDate.now();
-        List<Attendance> allAttendances = attendanceRepository.findAll();
+        long todayAbsences = attendanceRepository.countByDateAndStatus(today, AttendanceStatus.ABSENT);
 
-        long todayAbsences = allAttendances.stream()
-                .filter(a -> a.getDate().equals(today) && a.getStatus() == AttendanceStatus.ABSENT)
-                .count();
-
-        Map<String, Long> employeesPerDepartment = employeeRepository.findAll().stream()
-                .filter(e -> e.getDepartment() != null)
-                .collect(Collectors.groupingBy(
-                        e -> e.getDepartment().getName(),
-                        Collectors.counting()
+        Map<String, Long> employeesPerDepartment = employeeRepository.countEmployeesByDepartment().stream()
+                .collect(Collectors.toMap(
+                        arr -> (String) arr[0],
+                        arr -> (Long) arr[1]
                 ));
 
-        // Intelligence Layer Logic: Calculate risky employees
-        Map<Long, List<Attendance>> attendanceByEmployee = allAttendances.stream()
+        // Optimized: only load current month's attendance for risk calculation
+        LocalDate monthStart = today.withDayOfMonth(1);
+        List<Attendance> monthAttendances = attendanceRepository.findByDateBetween(monthStart, today);
+
+        Map<Long, List<Attendance>> attendanceByEmployee = monthAttendances.stream()
                 .collect(Collectors.groupingBy(a -> a.getEmployee().getId()));
 
         List<RiskyEmployeeDTO> riskyEmployees = attendanceByEmployee.entrySet().stream()

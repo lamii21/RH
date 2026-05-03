@@ -1,35 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 :root {
-  --primary-color: #4f46e5;
-  --primary-hover: #4338ca;
-  --secondary-color: #10b981;
-  --bg-color: #f8fafc;
+  --primary-color: #1E4D35; /* Forest Green */
+  --primary-hover: #163829;
+  --accent-color: #C9A84C;  /* Gold */
+  --bg-color: #F5F5F0;      /* Stone */
   --surface-color: #ffffff;
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
+  --text-primary: #1A1A1A;
+  --text-secondary: #4A4A4A;
+  --border-color: #D1D1CB;
   --danger-color: #ef4444;
   --warning-color: #f59e0b;
-  --sidebar-width: 250px;
-  --header-height: 64px;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --border-radius: 8px;
+  --sidebar-width: 260px;
+  --header-height: 70px;
+  --shadow-sm: 0 1px 3px 0 rgba(30, 77, 53, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(30, 77, 53, 0.15);
+  --shadow-lg: 0 10px 25px -5px rgba(30, 77, 53, 0.2);
+  --border-radius: 4px; /* More architectural feel */
 }
 
 [data-theme="dark"] {
-  --primary-color: #6366f1;
-  --bg-color: #0f172a;
-  --surface-color: #1e293b;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --border-color: #334155;
+  --primary-color: #C9A84C;
+  --primary-hover: #B8973B;
+  --bg-color: #111D17;
+  --surface-color: #163829;
+  --text-primary: #F5F5F0;
+  --text-secondary: #A0A090;
+  --border-color: #2D4A3C;
+}
+
+[dir="rtl"] {
+  text-align: right;
+  font-family: 'Inter', 'Arial', sans-serif;
 }
 
 * {
@@ -198,7 +204,7 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f0fdf4 0%, #e0e7ff 100%);
+  background: linear-gradient(135deg, #1E4D35 0%, #163829 100%);
   padding: 1rem;
 }
 

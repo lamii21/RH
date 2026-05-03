@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
+import ToastNotification from "./ToastNotification";
 import "./components.css";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -15,17 +16,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     setMounted(true);
     const token = localStorage.getItem('token');
     
-    if (!token && pathname !== '/login' && pathname !== '/register') {
-      router.push('/login');
+    if (!token && pathname !== '/' && pathname !== '/login' && pathname !== '/register') {
+      router.push('/');
     }
   }, [pathname, router]);
 
-  const isAuthPage = pathname === '/login' || pathname === '/register';
+  const isPublicPage = pathname === '/' || pathname === '/login' || pathname === '/register';
 
   // We still want to avoid rendering the full dashboard on server/initial hydrate if not mounted
   // but we should render children consistently if possible.
   
-  if (isAuthPage) {
+  if (isPublicPage) {
     return <div className="animate-fade-in">{children}</div>;
   }
 
@@ -38,6 +39,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {children}
         </div>
       </main>
+      <ToastNotification />
     </div>
   );
 }

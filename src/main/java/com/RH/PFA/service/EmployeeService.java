@@ -11,6 +11,8 @@ import com.RH.PFA.repository.DepartmentRepository;
 import com.RH.PFA.repository.EmployeeRepository;
 import com.RH.PFA.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
@@ -64,7 +67,11 @@ public class EmployeeService {
         return mapToDTO(savedEmployee);
     }
 
-    public List<EmployeeDTO> getAllEmployees() {
+    public Page<EmployeeDTO> getAllEmployees(Pageable pageable) {
+        return employeeRepository.findAll(pageable).map(this::mapToDTO);
+    }
+
+    public List<EmployeeDTO> getAllEmployeesList() {
         return employeeRepository.findAll().stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());

@@ -8,6 +8,8 @@ import com.RH.PFA.exception.ResourceNotFoundException;
 import com.RH.PFA.repository.AttendanceRepository;
 import com.RH.PFA.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,10 +82,8 @@ public class AttendanceService {
                 .collect(Collectors.toList());
     }
 
-    public List<AttendanceDTO> getAllAttendance() {
-        return attendanceRepository.findAll().stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+    public Page<AttendanceDTO> getAllAttendance(Pageable pageable) {
+        return attendanceRepository.findAll(pageable).map(this::mapToDTO);
     }
 
     private AttendanceDTO mapToDTO(Attendance attendance) {

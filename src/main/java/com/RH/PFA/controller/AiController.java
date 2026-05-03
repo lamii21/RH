@@ -1,5 +1,6 @@
 package com.RH.PFA.controller;
 
+import com.RH.PFA.dto.AiChatRequest;
 import com.RH.PFA.dto.AiCopilotResponse;
 import com.RH.PFA.dto.ChurnPredictionResponse;
 import com.RH.PFA.service.AiService;
@@ -8,9 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/ai")
+@RequestMapping("/api/v1/ai")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // Assuming we want broad access for dev
 public class AiController {
 
     private final AiService aiService;
@@ -20,8 +20,8 @@ public class AiController {
         return ResponseEntity.ok(aiService.predictChurn(employeeId));
     }
 
-    @GetMapping("/copilot")
-    public ResponseEntity<AiCopilotResponse> askCopilot(@RequestParam String query, @RequestParam Long employeeId) {
-        return ResponseEntity.ok(aiService.askCopilot(query, employeeId));
+    @PostMapping("/copilot")
+    public ResponseEntity<AiCopilotResponse> askCopilot(@RequestBody AiChatRequest request) {
+        return ResponseEntity.ok(aiService.askCopilot(request));
     }
 }

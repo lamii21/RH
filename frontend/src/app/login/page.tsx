@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
+import AnnassimLogo from '@/components/ui/AnnassimLogo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,50 +21,81 @@ export default function LoginPage() {
     try {
       const res = await api.post('/auth/authenticate', { email, password });
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('userRole', 'ADMIN'); 
       router.push('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid credentials');
+      setError(err.response?.data?.error || err.response?.data?.message || 'Identifiants invalides');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-box animate-fade-in">
-        <h1 className="auth-title">Welcome Back</h1>
-        <p className="auth-subtitle">Login to SMART HR to manage your team.</p>
-        
-        {error && <div style={{ padding: '0.75rem', marginBottom: '1rem', color: 'white', backgroundColor: 'var(--danger-color)', borderRadius: '0.375rem', fontSize: '0.875rem' }}>{error}</div>}
-        
-        <form onSubmit={handleSubmit} className="flex-col gap-4">
-          <div>
-            <label>Email Address</label>
-            <input 
-              type="email" 
-              className="input" 
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required 
-            />
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Left side: Brand */}
+      <div className="md:w-1/2 bg-brand-green flex flex-col items-center justify-center p-12 text-center">
+        <AnnassimLogo variant="dark" size={80} className="mb-8" />
+        <h2 className="text-brand-gold text-2xl font-light italic mb-2">"Votre investissement en toute confiance"</h2>
+        <h2 className="text-brand-gold/80 text-xl font-light leading-relaxed tracking-wider mb-8" dir="rtl">"استثمارك في أمان تام"</h2>
+        <div className="w-24 h-px bg-brand-gold/30"></div>
+      </div>
+
+      {/* Right side: Form */}
+      <div className="md:w-1/2 bg-brand-stone flex items-center justify-center p-8">
+        <div className="w-full max-w-md bg-white p-10 rounded-lg shadow-xl animate-fade-in border border-brand-green/5">
+          <div className="mb-10 text-center">
+            <h1 className="text-3xl font-black text-brand-green uppercase tracking-tighter">Connexion</h1>
+            <p className="text-brand-stone bg-brand-green/10 text-brand-green px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest inline-block mt-2">Espace Ressources Humaines</p>
           </div>
-          <div>
-            <label>Password</label>
-            <input 
-              type="password" 
-              className="input" 
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required 
-            />
+          
+          {error && (
+            <div className="bg-rose-50 border-l-4 border-rose-500 p-4 mb-6 text-rose-800 text-sm animate-shake">
+              <p className="font-bold">Erreur</p>
+              <p>{error}</p>
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <div className="flex justify-between items-end mb-2">
+                <label className="m-0 text-xs font-bold text-brand-green uppercase tracking-wider">Email Address</label>
+                <span className="text-[10px] text-brand-gold font-bold" dir="rtl">البريد الإلكتروني</span>
+              </div>
+              <input 
+                type="email" 
+                className="input border-brand-stone focus:border-brand-gold focus:ring-brand-gold/20" 
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required 
+              />
+            </div>
+            <div>
+              <div className="flex justify-between items-end mb-2">
+                <label className="m-0 text-xs font-bold text-brand-green uppercase tracking-wider">Password</label>
+                <span className="text-[10px] text-brand-gold font-bold" dir="rtl">كلمة المرور</span>
+              </div>
+              <input 
+                type="password" 
+                className="input border-brand-stone focus:border-brand-gold focus:ring-brand-gold/20" 
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required 
+              />
+            </div>
+            
+            <button 
+              type="submit" 
+              className="w-full bg-brand-green hover:bg-brand-dark text-brand-gold font-black py-4 rounded-md transition-all shadow-lg shadow-brand-green/20 uppercase tracking-widest text-sm flex items-center justify-center gap-2" 
+              disabled={loading}
+            >
+              {loading ? 'Authentification...' : 'Se Connecter'}
+              <span className="text-[10px] opacity-50" dir="rtl">تسجيل الدخول</span>
+            </button>
+          </form>
+          
+          <div className="mt-8 text-center border-t border-brand-stone pt-6">
+            <p className="text-xs text-brand-green/60 font-medium italic">© 2024 Lotissement Annassim 2. Tous droits réservés.</p>
           </div>
-          <button type="submit" className="btn btn-primary w-full mt-2" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-        
-        <div className="mt-6 text-center text-sm color-secondary">
-          Don't have an account? <Link href="/register" className="color-primary font-medium">Create an account</Link>
         </div>
       </div>
     </div>

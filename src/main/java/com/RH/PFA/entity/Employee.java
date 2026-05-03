@@ -39,6 +39,7 @@ public class Employee {
     @Column(name = "job_title")
     private String jobTitle;
 
+    @Builder.Default
     @Column(name = "leave_balance")
     private Integer leaveBalance = 30;
 

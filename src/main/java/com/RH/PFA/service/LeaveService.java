@@ -9,6 +9,8 @@ import com.RH.PFA.exception.ResourceNotFoundException;
 import com.RH.PFA.repository.EmployeeRepository;
 import com.RH.PFA.repository.LeaveRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LeaveService {
 
     private final LeaveRepository leaveRepository;
@@ -31,6 +34,15 @@ public class LeaveService {
     public LeaveResponseDTO requestLeave(LeaveRequestDTO request) {
         Employee employee = employeeRepository.findById(request.getEmployeeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+
+        if (request.getStartDate().isAfter(request.getEndDate())) {
+            throw new IllegalArgumentException("Leave end date must be after start date");
+        }
+
+        long daysRequested = ChronoUnit.DAYS.between(request.getStartDate(), request.getEndDate()) + 1;
+        if (employee.getLeaveBalance() < daysRequested) {
+            throw new IllegalArgumentException("Insufficient leave balance");
+        }
 
         Leave leave = Leave.builder()
                 .employee(employee)
@@ -46,8 +58,8 @@ public class LeaveService {
         return mapToDTO(leave);
     }
 
-    public List<LeaveResponseDTO> getAllLeaves() {
-        return leaveRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+    public Page<LeaveResponseDTO> getAllLeaves(Pageable pageable) {
+        return leaveRepository.findAll(pageable).map(this::mapToDTO);
     }
 
     public List<LeaveResponseDTO> getEmployeeLeaves(Long employeeId) {
@@ -60,7 +72,7 @@ public class LeaveService {
                 .orElseThrow(() -> new ResourceNotFoundException("Leave request not found"));
 
         if (leave.getStatus() != LeaveStatus.PENDING) {
-            throw new IllegalStateException("Leave is already processed");
+            throw new IllegalStateException("Leave already processed");
         }
 
         if (smartSchedulingService.willCauseUnderstaffing(leave)) {

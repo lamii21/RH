@@ -31,6 +31,6 @@ public class LeaveEventListener {
                 .build();
 
         // Broadcast to a specific topic
-        messagingTemplate.convertAndSend("/topic/leaves", dto);
+        messagingTemplate.convertAndSend("/topic/notifications", dto);
     }
 }
