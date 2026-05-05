@@ -26,9 +26,11 @@ export default function DashboardPage() {
   const [clocking, setClocking] = useState(false);
   const [status, setStatus] = useState<'IN' | 'OUT'>('OUT');
   const [lang, setLang] = useState<Language>('fr');
+  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
+    setMounted(true);
     const savedLang = localStorage.getItem('lang') as Language;
     if (savedLang) setLang(savedLang);
 
@@ -65,6 +67,8 @@ export default function DashboardPage() {
     fetchDashboard();
     fetchAttendanceStatus();
   }, []);
+
+  if (!mounted) return null;
 
   const t = translations[lang];
 
@@ -172,23 +176,33 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="bg-white rounded-lg p-6 shadow-sm border border-brand-stone hover:border-brand-gold transition-colors group"
+            className="relative bg-white rounded-2xl p-6 shadow-sm border border-brand-stone hover:border-brand-gold transition-colors group overflow-hidden"
           >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`p-3 rounded-lg ${stat.bg} ${stat.color}`}>
+            {/* Animated Glow Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+            <div className="flex justify-between items-start mb-4 relative z-10">
+              <div className={`p-3 rounded-xl ${stat.bg} ${stat.color} shadow-sm group-hover:scale-110 transition-transform duration-300`}>
                 <stat.icon size={24} />
               </div>
               <div className="h-10 w-24">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={stat.trend}>
-                    <Line type="monotone" dataKey="value" stroke={stat.color.includes('emerald') ? '#059669' : stat.color.includes('indigo') ? '#4f46e5' : stat.color.includes('amber') ? '#d97706' : '#e11d48'} strokeWidth={2} dot={false} />
+                    <Line 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke={stat.color.includes('emerald') ? '#059669' : stat.color.includes('indigo') ? '#4f46e5' : stat.color.includes('amber') ? '#d97706' : '#e11d48'} 
+                      strokeWidth={3} 
+                      dot={false}
+                      style={{ filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.1))' }}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
-            <div>
+            <div className="relative z-10">
               <p className="text-[10px] font-black text-brand-stone uppercase tracking-widest mb-1">{stat.label}</p>
-              <h3 className="text-3xl font-black text-brand-green tracking-tight">{stat.value}</h3>
+              <h3 className="text-4xl font-black text-brand-green tracking-tight group-hover:text-brand-gold transition-colors">{stat.value}</h3>
             </div>
           </motion.div>
         ))}

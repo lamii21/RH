@@ -14,8 +14,10 @@ import HomeFooter from '@/components/home/HomeFooter';
 export default function HomePage() {
   const router = useRouter();
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const token = localStorage.getItem('token');
     if (token) {
       router.push('/dashboard');
@@ -23,6 +25,8 @@ export default function HomePage() {
       setCheckingAuth(false);
     }
   }, [router]);
+
+  if (!mounted) return null;
 
   if (checkingAuth) {
     return (

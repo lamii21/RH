@@ -18,7 +18,7 @@ export default function LeaveRequestModal({ isOpen, onClose, onSuccess }: LeaveR
     endDate: '',
     type: 'ANNUAL',
     reason: '',
-    employeeId: parseInt(localStorage.getItem('demoEmployeeId') || '1')
+    employeeId: typeof window !== 'undefined' ? parseInt(localStorage.getItem('demoEmployeeId') || '1') : 1
   });
 
   if (!isOpen) return null;
