@@ -11,6 +11,8 @@ import java.util.Optional;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByUserId(Long userId);
+    Optional<Employee> findByUserEmail(String email);
+    List<Employee> findByIsPublicProfileTrue();
     List<Employee> findByDepartmentId(Long departmentId);
     long countByDepartmentId(Long departmentId);
 

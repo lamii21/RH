@@ -43,6 +43,16 @@ public class Employee {
     @Column(name = "leave_balance")
     private Integer leaveBalance = 30;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+    @Builder.Default
+    @Column(name = "is_public_profile")
+    private Boolean isPublicProfile = false;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

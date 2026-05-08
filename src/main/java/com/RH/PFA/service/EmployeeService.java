@@ -111,6 +111,24 @@ public class EmployeeService {
         employeeRepository.delete(employee);
     }
 
+    public EmployeeDTO getEmployeeByEmail(String email) {
+        Employee employee = employeeRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for email: " + email));
+        return mapToDTO(employee);
+    }
+
+    @Transactional
+    public EmployeeDTO updateProfile(String email, String bio, String avatarUrl, Boolean isPublicProfile) {
+        Employee employee = employeeRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for email: " + email));
+        
+        if (bio != null) employee.setBio(bio);
+        if (avatarUrl != null) employee.setAvatarUrl(avatarUrl);
+        if (isPublicProfile != null) employee.setIsPublicProfile(isPublicProfile);
+        
+        return mapToDTO(employeeRepository.save(employee));
+    }
+
     private EmployeeDTO mapToDTO(Employee employee) {
         return EmployeeDTO.builder()
                 .id(employee.getId())

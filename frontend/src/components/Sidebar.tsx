@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Users, Calendar, Clock, FileText, Settings, Bot } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, Clock, FileText, Settings, Bot, Briefcase } from 'lucide-react';
 import AnnassimLogo from './ui/AnnassimLogo';
 
 const NAV_ITEMS = [
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { name: 'Congés', path: '/leaves', icon: Calendar },
   { name: 'Présences', path: '/attendance', icon: Clock },
   { name: 'Documents', path: '/documents', icon: FileText },
+  { name: 'Recrutement', path: '/recruitment', icon: Briefcase },
   { name: 'Copilote IA', path: '/copilot', icon: Bot },
 ];
 

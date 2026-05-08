@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import ToastNotification from "./ToastNotification";
+import ChatWidget from "./ChatWidget";
 import "./components.css";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -40,6 +41,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </main>
       <ToastNotification />
+      <ChatWidget />
     </div>
   );
 }

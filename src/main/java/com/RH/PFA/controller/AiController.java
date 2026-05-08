@@ -24,4 +24,9 @@ public class AiController {
     public ResponseEntity<AiCopilotResponse> askCopilot(@RequestBody AiChatRequest request) {
         return ResponseEntity.ok(aiService.askCopilot(request));
     }
+
+    @PostMapping("/public/chat")
+    public ResponseEntity<AiCopilotResponse> askPublicChat(@RequestBody AiChatRequest request) {
+        return ResponseEntity.ok(aiService.askPublicChat(request));
+    }
 }

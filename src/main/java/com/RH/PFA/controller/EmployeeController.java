@@ -48,4 +48,18 @@ public class EmployeeController {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<EmployeeDTO> getMyProfile(java.security.Principal principal) {
+        return ResponseEntity.ok(employeeService.getEmployeeByEmail(principal.getName()));
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<EmployeeDTO> updateMyProfile(
+            java.security.Principal principal,
+            @RequestParam(required = false) String bio,
+            @RequestParam(required = false) String avatarUrl,
+            @RequestParam(required = false) Boolean isPublicProfile) {
+        return ResponseEntity.ok(employeeService.updateProfile(principal.getName(), bio, avatarUrl, isPublicProfile));
+    }
 }

@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/home/Navbar';
 import HeroSection from '@/components/home/HeroSection';
-import StatsBar from '@/components/home/StatsBar';
+import CompanyPulse from '@/components/home/CompanyPulse';
 import AboutSection from '@/components/home/AboutSection';
+import TeamSection from '@/components/home/TeamSection';
 import LotsSection from '@/components/home/LotsSection';
 import LocationSection from '@/components/home/LocationSection';
 import ContactSection from '@/components/home/ContactSection';
 import HomeFooter from '@/components/home/HomeFooter';
+import ChatWidget from '@/components/ChatWidget';
 
 export default function HomePage() {
   const router = useRouter();
@@ -41,13 +43,15 @@ export default function HomePage() {
       <Navbar />
       <main>
         <HeroSection />
-        <StatsBar />
+        <CompanyPulse />
         <AboutSection />
+        <TeamSection />
         <LotsSection />
         <LocationSection />
         <ContactSection />
       </main>
       <HomeFooter />
+      <ChatWidget />
     </div>
   );
 }

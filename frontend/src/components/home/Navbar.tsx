@@ -20,7 +20,9 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Accueil', href: '#' },
     { name: 'À propos', href: '#a-propos' },
+    { name: 'Équipe', href: '#equipe' },
     { name: 'Nos Lots', href: '#nos-lots' },
+    { name: 'Carrières', href: '/careers' },
     { name: 'Contact', href: '#contact' },
   ];
 
